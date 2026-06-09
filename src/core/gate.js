@@ -8,6 +8,7 @@ import gsap from 'gsap';
 import { startMusic } from './audio.js';
 import { reducedMotion } from './env.js';
 import { bindMagnetic } from './magnetic.js';
+import { requestTilt } from './parallax.js';
 
 export function showGate() {
   return new Promise((resolve) => {
@@ -56,6 +57,7 @@ export function showGate() {
 
     function close(withSound) {
       if (withSound) startMusic();
+      requestTilt(); // iOS gyro needs this on a user gesture — enables tilt parallax
       requestFullscreen();
       gsap.to(gate, {
         autoAlpha: 0,

@@ -23,7 +23,8 @@ for (const vp of VIEWPORTS) {
   page.on('pageerror', (e) => console.log(`  [${tag} pageerror]`, e.message));
 
   await page.goto(URL, { waitUntil: 'networkidle' });
-  await wait(page, 600);
+  await page.waitForSelector('button[data-action="silent"]', { timeout: 8000 });
+  await wait(page, 400); // let the gate intro settle
   await page.screenshot({ path: shot('1-gate') });
 
   await page.click('button[data-action="silent"]');
@@ -58,6 +59,7 @@ for (const vp of VIEWPORTS) {
   page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
   page.on('pageerror', (e) => console.log(`  [${tag} pageerror]`, e.message));
   await page.goto(URL, { waitUntil: 'networkidle' });
+  await page.waitForSelector('button[data-action="silent"]', { timeout: 8000 });
   await page.click('button[data-action="silent"]');
   await wait(page, 1000);
   await page.click('[data-seal]');
@@ -67,6 +69,12 @@ for (const vp of VIEWPORTS) {
   await page.click('[data-cake]');
   await wait(page, 3200);
   await page.screenshot({ path: shot('7-cake') });
+  // blow out the candle → caption should change to the wish
+  await page.evaluate(() => document.querySelector('.cake-illus__candleflame')?.click());
+  await wait(page, 700);
+  const caption = await page.$eval('.cake-caption', (n) => n.textContent).catch(() => '');
+  console.log(`  [${tag}] cake caption after blow-out: ${caption}`);
+  await page.screenshot({ path: shot('7b-cake-blown') });
   await page.evaluate(() => document.querySelector('[data-card]')?.click());
   await wait(page, 2200);
   await page.screenshot({ path: shot('8-cake-note') });

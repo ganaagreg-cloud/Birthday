@@ -13,6 +13,7 @@ export default function galleryScene(ctx) {
   const el = document.createElement('section');
   el.className = 'scene gallery-scene';
   el.innerHTML = `
+    <div class="scene-glow" data-depth="-16" aria-hidden="true"></div>
     <div class="scene__inner">
       <p class="eyebrow">Дурсамж</p>
       <div class="gallery">
@@ -33,6 +34,7 @@ export default function galleryScene(ctx) {
   const track = el.querySelector('[data-track]');
   const dotsWrap = el.querySelector('[data-dots]');
   let particles;
+  let parallax;
   let active = 0;
   const cards = [];
 
@@ -154,6 +156,7 @@ export default function galleryScene(ctx) {
     el,
     enter() {
       particles = ctx.particles(el);
+      parallax = ctx.parallax(el);
       arrange();
       if (reducedMotion) return;
       gsap.from(cards, {
@@ -163,10 +166,14 @@ export default function galleryScene(ctx) {
         ease: 'expo.out',
         stagger: 0.06,
       });
+      // gentle idle float on the whole stack so it feels held, not pinned
+      gsap.to(track, { y: -6, duration: 3.4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
     },
     destroy() {
       particles?.destroy();
+      parallax?.destroy();
       gsap.killTweensOf(cards);
+      gsap.killTweensOf(track);
     },
   };
 }

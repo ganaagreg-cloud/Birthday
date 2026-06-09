@@ -17,6 +17,7 @@ import './styles/scenes.css';
 import { reducedMotion } from './core/env.js';
 import { initCursor } from './core/cursor.js';
 import { initAudio } from './core/audio.js';
+import { showPreloader } from './core/preloader.js';
 import { showGate, mountAudioToggle } from './core/gate.js';
 import { createSceneManager } from './core/sceneManager.js';
 
@@ -56,5 +57,7 @@ const manager = createSceneManager(root, [
   cakeScene, // branch scene — entered from the Letter, not part of the linear flow
 ]);
 
-// --- Go: gate first, then scene 1 ------------------------------------------
-showGate().then(() => manager.start());
+// --- Go: preloader → gate → scene 1 ----------------------------------------
+showPreloader()
+  .then(showGate)
+  .then(() => manager.start());

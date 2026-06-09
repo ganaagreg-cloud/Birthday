@@ -46,6 +46,22 @@
   background: rgba(240, 207, 154, 0.08);
 }
 
+/* Pressed — ring shrinks toward the dot for a physical click */
+.cursor--press .cursor__ring {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+}
+
+/* Context hint: "spin" (cake orbit) — dashed, larger ring inviting a drag */
+.cursor--spin .cursor__ring {
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  border-style: dashed;
+  border-color: var(--gold-bright);
+}
+
 .cursor--hidden {
   opacity: 0;
 }

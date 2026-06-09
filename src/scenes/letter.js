@@ -14,8 +14,9 @@ export default function letterScene(ctx) {
   const el = document.createElement('section');
   el.className = 'scene letter-scene';
   el.innerHTML = `
+    <div class="scene-glow" data-depth="-16" aria-hidden="true"></div>
     <div class="scene__inner">
-      <article class="letter-paper" data-paper title="Бүхэлд нь харах">
+      <article class="letter-paper" data-paper data-depth="8" title="Бүхэлд нь харах">
         <div class="letter-greeting" data-greeting></div>
         <div class="letter-body" data-body></div>
         <div class="letter-signoff" data-signoff></div>
@@ -31,6 +32,7 @@ export default function letterScene(ctx) {
   const bodyEl = el.querySelector('[data-body]');
   const signoffEl = el.querySelector('[data-signoff]');
   let particles;
+  let parallax;
   let tl;
 
   // Build masked lines: greeting + each body line + signoff
@@ -57,6 +59,7 @@ export default function letterScene(ctx) {
     el,
     enter() {
       particles = ctx.particles(el);
+      parallax = ctx.parallax(el);
       tl = gsap.timeline();
       tl.add(revealLines(greetInners, { duration: 1.1, stagger: 0.1 }));
       tl.add(revealLines(bodyInners, { duration: 1, stagger: 0.14 }), reducedMotion ? 0 : '-=0.6');
@@ -74,6 +77,7 @@ export default function letterScene(ctx) {
     },
     destroy() {
       particles?.destroy();
+      parallax?.destroy();
       tl?.kill();
     },
   };

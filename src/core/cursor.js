@@ -40,24 +40,43 @@ export function initCursor() {
   requestAnimationFrame(loop);
 
   // Grow ring near interactive elements (event delegation so it works for
-  // dynamically mounted scenes).
+  // dynamically mounted scenes). Elements may also carry `data-cursor-state`
+  // (e.g. "spin", "open") to morph the cursor into a context-specific hint.
   const interactiveSelector =
-    'a, button, .btn, .wax-seal, .dial, .polaroid, .gallery__arrow, [data-magnetic], [data-cursor-grow]';
+    'a, button, .btn, .btn-soft, .wax-seal, .polaroid, .gallery__arrow, [data-magnetic], [data-cursor-grow]';
+
+  let stateClass = '';
+  const setState = (s) => {
+    if (stateClass) el.classList.remove(stateClass);
+    stateClass = s ? `cursor--${s}` : '';
+    if (stateClass) el.classList.add(stateClass);
+  };
 
   document.addEventListener(
     'mouseover',
     (e) => {
-      if (e.target.closest(interactiveSelector)) el.classList.add('cursor--active');
+      const hit = e.target.closest(interactiveSelector);
+      if (hit) {
+        el.classList.add('cursor--active');
+        setState(hit.dataset.cursorState || '');
+      }
     },
     { passive: true }
   );
   document.addEventListener(
     'mouseout',
     (e) => {
-      if (e.target.closest(interactiveSelector)) el.classList.remove('cursor--active');
+      if (e.target.closest(interactiveSelector)) {
+        el.classList.remove('cursor--active');
+        setState('');
+      }
     },
     { passive: true }
   );
+
+  // Press state for a physical "click" feel
+  document.addEventListener('mousedown', () => el.classList.add('cursor--press'), { passive: true });
+  document.addEventListener('mouseup', () => el.classList.remove('cursor--press'), { passive: true });
 
   // Hide cursor when it leaves the window
   document.addEventListener('mouseleave', () => el.classList.add('cursor--hidden'));

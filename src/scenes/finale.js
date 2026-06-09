@@ -19,11 +19,13 @@ export default function finaleScene(ctx) {
     <div class="scene__inner">
       <p class="eyebrow">Төгсгөл</p>
       <h1 class="finale__title" data-title>${title}</h1>
+      ${CONFIG.finalePhoto ? `<img class="finale__photo" data-photo src="${CONFIG.finalePhoto}" alt="" decoding="async" />` : ''}
       <p class="finale__wish" data-wish>${CONFIG.finaleWish}</p>
       <p class="finale__sub">Чамайг хайрладаг хүн чинь энэ бүхнийг чамд зориулав ❤</p>
       <div class="btn-row">
         <button class="btn" data-magnetic data-replay>Дахин үзэх</button>
       </div>
+      <button class="btn-soft" data-magnetic data-share>Хуваалцах</button>
     </div>
   `;
 
@@ -100,6 +102,17 @@ export default function finaleScene(ctx) {
     ctx.replay();
   });
 
+  // Soft share: native share sheet where available, else copy the link.
+  el.querySelector('[data-share]').addEventListener('click', async () => {
+    const data = { title: document.title, text: 'Чамд зориулсан захидал 💌', url: location.href };
+    try {
+      if (navigator.share) await navigator.share(data);
+      else await navigator.clipboard?.writeText(location.href);
+    } catch {
+      /* user cancelled — ignore */
+    }
+  });
+
   return {
     el,
     enter() {
@@ -117,7 +130,7 @@ export default function finaleScene(ctx) {
           ease: 'expo.out',
         });
         tl.from(
-          el.querySelectorAll('.finale__wish, .finale__sub, .btn-row'),
+          el.querySelectorAll('.finale__photo, .finale__wish, .finale__sub, .btn-row, .btn-soft'),
           { y: 20, autoAlpha: 0, duration: 1, ease: 'expo.out', stagger: 0.15 },
           '-=0.7'
         );

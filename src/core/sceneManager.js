@@ -20,6 +20,7 @@
 import gsap from 'gsap';
 import { reducedMotion } from './env.js';
 import { createParticles } from './particles.js';
+import { createParallax } from './parallax.js';
 import { play } from './audio.js';
 import { bindMagnetic } from './magnetic.js';
 
@@ -36,6 +37,7 @@ export function createSceneManager(root, scenes) {
     replay: () => go(0),
     sfx: play,
     particles: (parent, opts) => createParticles(parent, opts),
+    parallax: (scope, opts) => createParallax(scope, opts),
   });
 
   // Resolve optional scene names → index (for goTo('cake') etc.)
@@ -112,6 +114,12 @@ export function createSceneManager(root, scenes) {
         delay: prev ? dur * 0.35 : 0,
         onComplete: async () => {
           bindMagnetic(inst.el);
+          // Move focus to the scene's primary action for keyboard users.
+          // :focus-visible keeps the ring hidden for mouse users.
+          const primary =
+            inst.el.querySelector('.btn:not(.btn--ghost):not([hidden])') ||
+            inst.el.querySelector('.btn:not([hidden])');
+          primary?.focus?.({ preventScroll: true });
           await Promise.resolve(inst.enter?.());
           busy = false;
         },
@@ -120,6 +128,18 @@ export function createSceneManager(root, scenes) {
 
     setProgress(target);
   }
+
+  // Keyboard navigation: → / ← step the linear flow, R replays. Enter/Space are
+  // left to the focused button so they don't double-advance. Arrows are ignored
+  // on branch scenes (e.g. the cake), which have their own "back" control.
+  function onKey(e) {
+    if (busy) return;
+    const branch = scenes[index]?.isBranch;
+    if ((e.key === 'ArrowRight' || e.key === 'PageDown') && !branch) go(index + 1);
+    else if ((e.key === 'ArrowLeft' || e.key === 'PageUp') && !branch) go(index - 1);
+    else if (e.key === 'r' || e.key === 'R') go(0);
+  }
+  window.addEventListener('keydown', onKey);
 
   return {
     start: () => go(0),

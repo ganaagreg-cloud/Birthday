@@ -11,9 +11,10 @@ export default function envelopeScene(ctx) {
   const el = document.createElement('section');
   el.className = 'scene envelope-scene';
   el.innerHTML = `
+    <div class="scene-glow" data-depth="-22" aria-hidden="true"></div>
     <div class="scene__inner">
       <p class="eyebrow">Чамд нэгэн захидал ирлээ</p>
-      <div class="envelope-stage" style="margin: 2rem 0;">
+      <div class="envelope-stage" data-depth="14" style="margin: 2rem 0;">
         <div class="envelope" data-envelope>
           <div class="envelope__back"></div>
           <div class="envelope__letter" data-letter>
@@ -25,6 +26,7 @@ export default function envelopeScene(ctx) {
           <button class="wax-seal" data-seal aria-label="Лацыг дарж нээх">
             <span class="wax-seal__mark">&amp;</span>
           </button>
+          <span class="seal-puff" data-puff aria-hidden="true"></span>
         </div>
       </div>
       <div class="btn-row">
@@ -37,10 +39,12 @@ export default function envelopeScene(ctx) {
   const flap = el.querySelector('[data-flap]');
   const letter = el.querySelector('[data-letter]');
   const seal = el.querySelector('[data-seal]');
+  const puff = el.querySelector('[data-puff]');
   const openBtn = el.querySelector('[data-open]');
   const hint = el.querySelector('[data-hint]');
   let opened = false;
   let particles;
+  let parallax;
 
   function openEnvelope() {
     if (opened) return;
@@ -48,6 +52,13 @@ export default function envelopeScene(ctx) {
     ctx.sfx('pageTurn');
 
     const tl = gsap.timeline();
+    // a soft puff ring bursts out from where the seal was
+    tl.fromTo(
+      puff,
+      { scale: 0, autoAlpha: 0.65 },
+      { scale: 1, autoAlpha: 0, duration: reducedMotion ? 0.001 : 0.8, ease: 'expo.out' },
+      0
+    );
     // seal pops off
     tl.to(seal, {
       scale: 0,
@@ -90,6 +101,12 @@ export default function envelopeScene(ctx) {
     });
   }
 
+  // Tactile squish on press, before the click opens it
+  seal.addEventListener('pointerdown', () => {
+    if (opened) return;
+    gsap.killTweensOf(seal); // stop the idle heartbeat so the squish reads
+    gsap.to(seal, { scale: 0.84, duration: 0.12, ease: 'power2.out' });
+  });
   seal.addEventListener('click', openEnvelope);
   openBtn.addEventListener('click', () => ctx.next());
 
@@ -97,6 +114,7 @@ export default function envelopeScene(ctx) {
     el,
     enter() {
       particles = ctx.particles(el);
+      parallax = ctx.parallax(el);
       if (reducedMotion) return;
       // gentle idle float on the whole envelope to feel alive
       gsap.to(el.querySelector('[data-envelope]'), {
@@ -117,6 +135,7 @@ export default function envelopeScene(ctx) {
     },
     destroy() {
       particles?.destroy();
+      parallax?.destroy();
       gsap.killTweensOf([el.querySelector('[data-envelope]'), seal]);
     },
   };

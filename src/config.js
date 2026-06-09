@@ -109,6 +109,9 @@ export const CONFIG = {
   // Сүүлчийн сэтгэл хөдөлгөм мөр — ирээдүйн амлалт/хүсэл.
   // The final emotional line — a wish/promise for the future.
   finaleWish: 'Дараагийн төрсөн өдрүүдийг чинь ч бас хамтдаа угтмаар байна.',
+  // Сонголтоор: төгсгөлд гарах нэг зураг (хоосон бол гарахгүй).
+  // Optional: one closing photo on the finale ('' → none).
+  finalePhoto: '',
 };
 
 /* Туслах: загвар дотор {name}/{sender}-г орлуулна / fill {name},{sender} */

@@ -24,6 +24,7 @@
 import gsap from 'gsap';
 import { CONFIG } from '../config.js';
 import { reducedMotion, clamp } from '../core/env.js';
+import { haptic } from '../core/motion.js';
 
 const DRAG_SENS = 0.45; //  degrees of spin per px dragged
 const WHEEL_SENS = 0.03; // degrees of spin added per wheel-delta unit
@@ -47,7 +48,7 @@ export default function cakeScene(ctx) {
       <p class="eyebrow">Төрсөн өдрийн бялуу</p>
       <p class="cake-caption">Гүйлгэж эргүүлээд зургийг дарж захидлыг нь уншина уу 💌</p>
 
-      <div class="cake-stage" data-stage>
+      <div class="cake-stage" data-stage data-cursor-state="spin">
         <div class="cake-orbit" data-orbit></div>
         ${cakeMarkup()}
       </div>
@@ -257,6 +258,26 @@ export default function cakeScene(ctx) {
     ctx.sfx('pageTurn');
     ctx.goTo('letter'); // existing cinematic transition, back to the Letter
   });
+
+  // --- Tap the candle flame to blow it out → celebration spin + a wish ------
+  const flame = el.querySelector('.cake-illus__candleflame');
+  let blownOut = false;
+  if (flame) {
+    flame.style.pointerEvents = 'auto';
+    flame.style.cursor = 'pointer';
+    flame.addEventListener('click', (e) => {
+      e.stopPropagation(); // don't let the stage read it as a spin-drag
+      if (blownOut) return;
+      blownOut = true;
+      haptic(16);
+      ctx.sfx('unlock');
+      // fade by opacity (not scale) so it doesn't fight the CSS flicker transform
+      gsap.to(flame, { autoAlpha: 0, duration: 0.35, ease: 'power2.in' });
+      velocity = Math.max(velocity, 6); // the ring "celebrates"
+      const cap = el.querySelector('.cake-caption');
+      if (cap) cap.textContent = 'Хүслээ бодоорой ✨';
+    });
+  }
 
   // --- Preload + decode photos before the orbit appears (no pop-in) -------
   async function preload() {

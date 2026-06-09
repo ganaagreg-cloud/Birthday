@@ -130,7 +130,9 @@ Vite · vanilla JS · GSAP (+ScrollTrigger) · Lenis (smooth scroll) · Howler.j
 - Respects `prefers-reduced-motion` (calmer, instant fallbacks).
 - Animates only `transform` / `opacity`; particles pause when the tab is hidden.
 - Mobile-first, fully responsive; custom cursor disabled on touch.
-- Keyboard support on the lock dials (↑/↓).
+- Keyboard navigation: `←` / `→` step through scenes, `R` replays; the primary
+  action is focused on each scene for keyboard users.
+- Haptics on tap and device-tilt parallax on phones (where supported).
 
 ## 📁 Structure
 
@@ -138,10 +140,13 @@ Vite · vanilla JS · GSAP (+ScrollTrigger) · Lenis (smooth scroll) · Howler.j
 src/
   config.js          ← edit me!
   main.js            ← bootstraps everything
-  core/              ← scene manager, cursor, audio, particles, magnetic, text reveal, gate
+  core/              ← scene manager, cursor, audio, particles, magnetic, text reveal,
+                       gate, motion (ease/haptics), parallax (tilt depth), preloader
   scenes/            ← envelope, letter, gallery, finale, cake (one file each)
   styles/            ← base (tokens), cursor, scenes
 public/
   images/  audio/    ← your photos & music
-scripts/             ← placeholder asset generators
+  og-image.png       ← social share card (regen: node scripts/gen-og.mjs)
+scripts/             ← asset generators + Playwright screenshot/OG tools
+vercel.json          ← static deploy config (Vercel)
 ```

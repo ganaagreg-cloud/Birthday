@@ -15,10 +15,12 @@ let muted = false;
 let started = false;
 
 // Build a Howl, swallowing load errors (placeholder files may be silent/empty).
+// `src` may be a string OR an array of fallbacks, e.g.
+//   ['/audio/x.mp3', '/audio/x.wav'] — Howler plays the first the browser supports.
 function makeHowl(src, { loop = false, volume = 1 } = {}) {
   try {
     return new Howl({
-      src: [src],
+      src: Array.isArray(src) ? src : [src],
       loop,
       volume,
       html5: loop, // stream long music via HTML5 audio

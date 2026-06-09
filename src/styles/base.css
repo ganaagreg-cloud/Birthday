@@ -15,7 +15,8 @@
   --ink-soft: #3d2730;
 
   /* Typography */
-  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif; /* display headings */
+  --font-body: 'Cormorant Garamond', 'Playfair Display', Georgia, serif; /* reading prose */
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-hand: 'Caveat', 'Cormorant Garamond', cursive; /* handwritten notes */
 

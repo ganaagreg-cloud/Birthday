@@ -13,3 +13,6 @@ npm-debug.log*
 
 # Local screen recordings / scratch media
 *.mp4
+
+# Design-audit screenshots (scratch)
+design-shots/

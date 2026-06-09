@@ -276,8 +276,8 @@ export default function cakeScene(ctx) {
   return {
     el,
     async enter() {
-      // soft white sparkle reads better than gold on the bright pink backdrop
-      particles = ctx.particles(el, { color: '255, 250, 252' });
+      // gold embers, matching every other scene in the warm plum world
+      particles = ctx.particles(el);
       layout();
       window.addEventListener('resize', onResize, { passive: true });
       gsap.set(stage, { autoAlpha: 0 });

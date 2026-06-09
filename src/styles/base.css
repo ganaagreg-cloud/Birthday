@@ -1,0 +1,205 @@
+/* =============================================================================
+ * BASE — design tokens, reset, typography, shared layout
+ * ========================================================================== */
+
+:root {
+  /* Palette — warm dusty romantic-cinematic */
+  --rose-deep: #78555e;
+  --rose: #9c6b74;
+  --rose-soft: #c79aa1;
+  --cream: #f5ece2;
+  --cream-dim: #e7d8c8;
+  --gold: #d9b27c;
+  --gold-bright: #f0cf9a;
+  --ink: #2a1a1f;
+  --ink-soft: #3d2730;
+
+  /* Typography */
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-hand: 'Caveat', 'Cormorant Garamond', cursive; /* handwritten notes */
+
+  /* Motion */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-power4: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.65, 0.05, 0.36, 1);
+
+  --vh: 1vh; /* JS-updated for mobile 100vh fix */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--ink);
+  color: var(--cream);
+  overflow: hidden; /* scenes manage their own scroll */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  cursor: none; /* custom cursor takes over (pointer fallback on touch) */
+}
+
+/* Touch devices: restore native cursor, hide custom one */
+@media (hover: none), (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+}
+
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+/* A scene fills the viewport and is positioned absolutely so transitions overlap */
+.scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  will-change: opacity, transform;
+}
+
+.scene__inner {
+  position: relative;
+  z-index: 2;
+  width: min(92vw, 760px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Headings */
+h1,
+h2 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+/* Buttons — premium pill */
+.btn {
+  --btn-bg: var(--gold);
+  --btn-fg: var(--ink);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.95em 2.2em;
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--btn-fg);
+  background: var(--btn-bg);
+  border: none;
+  border-radius: 999px;
+  cursor: none;
+  overflow: hidden;
+  transition: box-shadow 0.5s var(--ease-expo), transform 0.4s var(--ease-expo);
+  box-shadow: 0 8px 30px -12px rgba(217, 178, 124, 0.7);
+}
+
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--cream);
+  border: 1px solid rgba(245, 236, 226, 0.35);
+  box-shadow: none;
+}
+
+.btn:hover {
+  box-shadow: 0 14px 44px -10px rgba(217, 178, 124, 0.85);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
+@media (hover: none) {
+  .btn {
+    cursor: pointer;
+  }
+}
+
+.btn-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* Eyebrow label */
+.eyebrow {
+  font-size: clamp(0.72rem, 1.8vw, 0.85rem);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--rose-soft);
+  font-weight: 500;
+}
+
+/* Particle canvas sits behind scene content */
+.particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Text-reveal mask helpers */
+.reveal-mask {
+  overflow: hidden;
+  display: block;
+}
+.reveal-line {
+  display: block;
+  will-change: transform;
+}
+
+/* Visually-hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reduced motion: damp all transitions/animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

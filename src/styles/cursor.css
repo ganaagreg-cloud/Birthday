@@ -1,0 +1,58 @@
+/* =============================================================================
+ * CUSTOM CURSOR — dot + magnetic ring that grows near interactive elements
+ * ========================================================================== */
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
+.cursor__dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--cream);
+  will-change: transform;
+}
+
+.cursor__ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 1.5px solid var(--cream);
+  border-radius: 50%;
+  will-change: transform, width, height;
+  transition: width 0.35s var(--ease-expo), height 0.35s var(--ease-expo),
+    opacity 0.35s var(--ease-expo), border-color 0.35s var(--ease-expo);
+}
+
+/* When hovering interactive elements (toggled from JS) */
+.cursor--active .cursor__ring {
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-color: var(--gold-bright);
+  background: rgba(240, 207, 154, 0.08);
+}
+
+.cursor--hidden {
+  opacity: 0;
+}
+
+/* Hide entirely on touch devices */
+@media (hover: none), (pointer: coarse) {
+  .cursor {
+    display: none;
+  }
+}

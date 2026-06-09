@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d9b27c"/>
+      <stop offset="1" stop-color="#78555e"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#g)"/>
+  <circle cx="300" cy="320" r="120" fill="rgba(255,255,255,0.12)"/>
+  <path d="M300 250c-18-34-78-30-78 14 0 40 78 86 78 86s78-46 78-86c0-44-60-48-78-14z" fill="rgba(255,255,255,0.5)"/>
+  <text x="300" y="640" font-family="Georgia, serif" font-size="44" fill="rgba(255,255,255,0.85)" text-anchor="middle">Зураг 6</text>
+  <text x="300" y="690" font-family="Georgia, serif" font-size="22" fill="rgba(255,255,255,0.6)" text-anchor="middle">Энд өөрийн зургаа тавина уу</text>
+</svg>

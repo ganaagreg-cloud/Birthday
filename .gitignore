@@ -1,0 +1,15 @@
+node_modules
+dist
+.DS_Store
+*.local
+.vite
+
+# Installed agent skills (symlinks + third-party content)
+.agents/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local screen recordings / scratch media
+*.mp4
